@@ -38,7 +38,12 @@ class SpreadsheetImporter
             $iterator->setIterateOnlyExistingCells(false);
             foreach ($iterator as $cell) {
                 if (count($cells) >= $maxColumns) {
-                    break;
+                    // Refuse the file instead of silently dropping data in extra columns.
+                    $extra = $cell->getValue();
+                    if ($extra !== null && $extra !== '') {
+                        throw new InvalidArgumentException("File has more than {$maxColumns} columns.");
+                    }
+                    continue;
                 }
                 $value = $cell->getCalculatedValue();
                 if (is_numeric($value) && Date::isDateTime($cell)) {

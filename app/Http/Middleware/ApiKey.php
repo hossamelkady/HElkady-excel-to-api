@@ -13,7 +13,7 @@ class ApiKey
         $expected = (string) config('excel_api.api_key');
 
         if ($expected === '') {
-            return response()->json(['message' => 'API_KEY is not configured on the server.'], 500);
+            return response()->json(['message' => 'API_KEY is not configured on the server.'], 503);
         }
 
         if (! hash_equals($expected, (string) $request->header('X-API-Key'))) {

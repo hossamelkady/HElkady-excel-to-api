@@ -72,7 +72,16 @@ class DatasetApiTest extends TestCase
     {
         config(['excel_api.api_key' => null]);
 
-        $this->getJson('/api/datasets', ['X-API-Key' => ''])->assertStatus(500);
+        $this->getJson('/api/datasets', ['X-API-Key' => ''])->assertStatus(503);
+    }
+
+    public function test_file_with_too_many_columns_is_rejected(): void
+    {
+        config(['excel_api.max_columns' => 3]);
+
+        $this->upload($this->xlsx([['A', 'B', 'C', 'D'], [1, 2, 3, 4]]), ['name' => 'Wide'])
+            ->assertStatus(422)
+            ->assertJsonPath('message', 'File has more than 3 columns.');
     }
 
     public function test_upload_xlsx_creates_dataset_with_types(): void

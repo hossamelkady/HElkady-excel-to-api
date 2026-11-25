@@ -32,7 +32,7 @@ Set a long random `API_KEY` in `.env`, then run `php artisan serve`. Every reque
 X-API-Key: your-key
 ```
 
-If `API_KEY` is empty, the API refuses all requests.
+If `API_KEY` is empty, the API refuses all requests with `503` and a message saying the key is not configured. Files with more columns than the limit are rejected with `422` instead of being truncated.
 
 ## Endpoints
 
